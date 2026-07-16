@@ -328,7 +328,7 @@
   // and inject each time "Generate Rota" is run. Everything below is
   // sample/mock data for design preview purposes only.
   // ---------------------------------------------------------------------
-  const ROTA_DATA = {"dateLabel":"Thursday 16 July 2026","generatedAt":"17:17","cards":[{"title":"Engagement calls","accent":"#F5B7AD","callsAvailable":527,"hoursStaffed":58,"completionPct":110,"estCallsCompleted":580,"names":["Allison Parker","Amy Rowlands","Bolanle Albert","Emily Bussell","Georgia Gidney","Georgia Wright","Holly Robinson","Iredia Omere","Isaac Frempong","Jacob Anderson","Neve Hutchinson","Olivia Carr","Satouka Basso","Tamare Gwenzi","Viona Gupta"]},{"title":"NDPP Ref calls","accent":"#6B91CB","callsAvailable":60,"hoursStaffed":5,"completionPct":125,"estCallsCompleted":75,"names":["Hina Ahmad"]},{"title":"WMS Weigh-in calls","accent":"#26D9D8","callsAvailable":463,"hoursStaffed":19,"completionPct":82,"estCallsCompleted":380,"names":["Emma Steele","Hanna Wahab","Jennah Latif","Jessica Brown","Leah Kanellos","Shameela Walker"]}]};
+  const ROTA_DATA = {"dateLabel":"Thursday 16 July 2026","generatedAt":"17:30","cards":[{"title":"Engagement calls","accent":"#F5B7AD","callsAvailable":527,"hoursStaffed":58,"completionPct":110,"estCallsCompleted":580,"vsTarget":229,"names":[{"name":"Allison Parker","hours":3},{"name":"Amy Rowlands","hours":4},{"name":"Bolanle Albert","hours":3},{"name":"Emily Bussell","hours":3},{"name":"Georgia Gidney","hours":3},{"name":"Georgia Wright","hours":3},{"name":"Holly Robinson","hours":3},{"name":"Iredia Omere","hours":5},{"name":"Isaac Frempong","hours":3},{"name":"Jacob Anderson","hours":3},{"name":"Neve Hutchinson","hours":6},{"name":"Olivia Carr","hours":5},{"name":"Satouka Basso","hours":5},{"name":"Tamare Gwenzi","hours":4},{"name":"Viona Gupta","hours":5}]},{"title":"NDPP Ref calls","accent":"#6B91CB","callsAvailable":60,"hoursStaffed":5,"completionPct":125,"estCallsCompleted":75,"vsTarget":45,"names":[{"name":"Hina Ahmad","hours":5}]},{"title":"WMS Weigh-in calls","accent":"#26D9D8","callsAvailable":463,"hoursStaffed":19,"completionPct":82,"estCallsCompleted":380,"vsTarget":-37,"names":[{"name":"Emma Steele","hours":4},{"name":"Hanna Wahab","hours":3},{"name":"Jennah Latif","hours":3},{"name":"Jessica Brown","hours":3},{"name":"Leah Kanellos","hours":3},{"name":"Shameela Walker","hours":3}]}]};
 
   function renderBoard(data) {
     document.getElementById('metaDate').textContent = data.dateLabel;
@@ -356,7 +356,9 @@
       statsEl.innerHTML =
         "<div class="stat"><div class="value">" + card.callsAvailable + "</div><div class="label">Calls available</div></div>" +
         "<div class="stat"><div class="value">" + card.hoursStaffed + "h</div><div class="label">Hours staffed</div></div>" +
-        "<div class="stat"><div class="value">" + card.completionPct + "%</div><div class="label">Est. completion</div></div>";
+        "<div class="stat"><div class="value">" + card.estCallsCompleted + "</div><div class="label">Est. calls completed</div></div>" +
+        "<div class="stat"><div class="value">" + card.completionPct + "%</div><div class="label">Est. completion</div></div>" +
+        "<div class="stat"><div class="value">" + (card.vsTarget >= 0 ? "+" : "") + card.vsTarget + "</div><div class="label">Vs target</div></div>";
       cardEl.appendChild(statsEl);
 
       const track = document.createElement('div');
@@ -377,10 +379,10 @@
       } else {
         const ul = document.createElement('ul');
         ul.className = 'names';
-        card.names.forEach(name => {
+        card.names.forEach(n => {
           const li = document.createElement('li');
-          li.textContent = name;
-          li.dataset.name = name.toLowerCase();
+          li.textContent = n.name + " — " + n.hours + "h";
+          li.dataset.name = n.name.toLowerCase();
           ul.appendChild(li);
         });
         cardEl.appendChild(ul);
