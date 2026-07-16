@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calls team rota</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@300;400;600&display=swap');
+
+  :root {
+    --deep-blue: #042D49;
+    --lilac: #C7B5F0;
+    --salmon: #F5B7AD;
+    --dawn-blue: #6B91CB;
+    --turquoise: #26D9D8;
+    --light-grey: #F2F2F2;
+    --dark-grey: #41616D;
+    --white: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Open Sans', 'Cera Pro', Helvetica, sans-serif;
+    background: var(--light-grey);
+    color: var(--dark-grey);
+    min-height: 100vh;
+  }
+
+  /* organic brain-derived background blob, subtle */
+  .blob {
+    position: fixed;
+    z-index: 0;
+    opacity: 0.06;
+    pointer-events: none;
+  }
+  .blob-1 { top: -120px; right: -140px; width: 480px; }
+  .blob-2 { bottom: -160px; left: -160px; width: 520px; }
+
+  header {
+    position: relative;
+    z-index: 1;
+    background: var(--deep-blue);
+    color: var(--white);
+    padding: 40px 32px 32px;
+  }
+
+  header .eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--turquoise);
+    margin: 0 0 8px;
+  }
+
+  header h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  header .subtitle {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.75);
+    margin: 0;
+  }
+
+  .search-wrap {
+    max-width: 1100px;
+    margin: -26px auto 0;
+    padding: 0 32px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .search-box {
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: 0px 8px 24px rgba(4, 45, 73, 0.18);
+    padding: 6px 6px 6px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .search-box svg { flex-shrink: 0; opacity: 0.5; }
+
+  .search-box input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 14px 0;
+    color: var(--deep-blue);
+    background: transparent;
+  }
+
+  .search-box input::placeholder { color: #9AAAB4; font-weight: 300; }
+
+  .search-box .clear-btn {
+    background: var(--light-grey);
+    border: none;
+    color: var(--dark-grey);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Open Sans', sans-serif;
+    display: none;
+  }
+  .search-box .clear-btn:hover { background: #e4e4e4; }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .meta-row .date {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--deep-blue);
+  }
+
+  .meta-row .updated {
+    font-size: 13px;
+    color: #7C8C94;
+    font-weight: 300;
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  @media (max-width: 860px) {
+    .board { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: 0px 4px 12px rgba(4, 45, 73, 0.1);
+    overflow: hidden;
+  }
+
+  .card-head {
+    color: var(--white);
+    padding: 18px 20px;
+  }
+
+  .card-head h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 2px;
+  }
+
+  .card-head .count {
+    font-size: 13px;
+    font-weight: 300;
+  }
+
+  .stats {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--light-grey);
+  }
+
+  .stat {
+    flex: 1;
+    padding: 14px 16px;
+    text-align: center;
+    border-right: 1px solid var(--light-grey);
+  }
+  .stat:last-child { border-right: none; }
+
+  .stat .value {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--deep-blue);
+  }
+
+  .stat .label {
+    font-size: 11px;
+    font-weight: 400;
+    color: #9AAAB4;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+
+  .progress-track {
+    height: 6px;
+    background: var(--light-grey);
+    margin: 0 20px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    top: -1px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .subgroup { border-bottom: 1px solid var(--light-grey); }
+  .subgroup:last-child { border-bottom: none; }
+
+  .subgroup-head {
+    padding: 12px 20px 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--dawn-blue);
+  }
+
+  ul.names {
+    list-style: none;
+    margin: 0;
+    padding: 4px 12px 16px;
+  }
+
+  ul.names li {
+    padding: 10px 12px;
+    margin: 2px 0;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--dark-grey);
+    transition: background 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  ul.names li.match {
+    background: var(--turquoise);
+    color: var(--deep-blue);
+    font-weight: 600;
+    transform: scale(1.03);
+  }
+
+  body.searching ul.names li:not(.match) {
+    opacity: 0.25;
+  }
+
+  .empty-note {
+    padding: 16px 20px 20px;
+    font-size: 14px;
+    font-style: italic;
+    color: #9AAAB4;
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    color: #9AAAB4;
+  }
+</style>
+</head>
+<body>
+
+<svg class="blob blob-1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#26D9D8" d="M45.6,-58.4C58.4,-49.6,67.4,-33.9,71.4,-16.8C75.4,0.3,74.4,18.8,66.2,33.4C58,48,42.6,58.7,26.1,64.8C9.6,70.9,-8,72.4,-24.6,67.6C-41.2,62.8,-56.8,51.7,-65.4,36.3C-74,20.9,-75.6,1.2,-71.2,-16.3C-66.8,-33.8,-56.4,-49.1,-42.6,-58C-28.8,-66.9,-14.4,-69.4,1.6,-71.5C17.6,-73.6,32.8,-67.2,45.6,-58.4Z" transform="translate(100 100)" />
+</svg>
+<svg class="blob blob-2" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#042D49" d="M52.1,-64.6C65.6,-54.6,72.6,-35.9,75.4,-17.1C78.2,1.7,76.8,20.6,68.6,35.8C60.4,51,45.4,62.5,28.7,68.9C12,75.3,-6.4,76.6,-23.7,71.6C-41,66.6,-57.2,55.3,-66.8,40C-76.4,24.7,-79.4,5.4,-75.8,-12.1C-72.2,-29.6,-62,-45.3,-48.2,-55.3C-34.4,-65.3,-17.2,-69.6,1.2,-71.1C19.6,-72.6,38.6,-74.6,52.1,-64.6Z" transform="translate(100 100)" />
+</svg>
+
+<header>
+  <p class="eyebrow">Second Nature &middot; Customer Engagement</p>
+  <h1>Today's calls rota</h1>
+  <p class="subtitle" id="dateLine">Loading date&hellip;</p>
+</header>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#41616D" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="searchInput" placeholder="Find your name&hellip;" autocomplete="off">
+    <button class="clear-btn" id="clearBtn">Clear</button>
+  </div>
+</div>
+
+<main>
+  <div class="meta-row">
+    <span class="date" id="metaDate">Thursday 16 July</span>
+    <span class="updated" id="metaUpdated">Generated at 09:02</span>
+  </div>
+
+  <div class="board" id="board">
+    <!-- Cards are rendered by renderBoard() below -->
+  </div>
+</main>
+
+<footer>Second Nature &middot; internal use only</footer>
+
+<script>
+  // ---------------------------------------------------------------------
+  // ROTA DATA -- this whole block is what the Apps Script will regenerate
+  // and inject each time "Generate Rota" is run. Everything below is
+  // sample/mock data for design preview purposes only.
+  // ---------------------------------------------------------------------
+  const ROTA_DATA = {"dateLabel":"Thursday 16 July 2026","generatedAt":"16:53","cards":[{"title":"Engagement calls","accent":"#F5B7AD","callsAvailable":527,"hoursStaffed":0,"completionPct":0,"names":[]},{"title":"NDPP Ref calls","accent":"#6B91CB","callsAvailable":60,"hoursStaffed":5,"completionPct":125,"names":["Hina Ahmad"]},{"title":"WMS Weigh-in calls","accent":"#26D9D8","callsAvailable":463,"hoursStaffed":26,"completionPct":112,"names":["Amy Rowlands","Emma Steele","Hanna Wahab","Iredia Omere","Neve Hutchinson","Tamare Gwenzi"]}]};
+
+  function renderBoard(data) {
+    document.getElementById('metaDate').textContent = data.dateLabel;
+    document.getElementById('metaUpdated').textContent = 'Generated at ' + data.generatedAt;
+    document.getElementById('dateLine').textContent = data.dateLabel + ' rota';
+
+    const board = document.getElementById('board');
+    board.innerHTML = '';
+
+    data.cards.forEach(card => {
+      const cardEl = document.createElement('div');
+      cardEl.className = 'card';
+
+      const head = document.createElement('div');
+      head.className = 'card-head';
+      head.style.background = card.accent;
+      // pick readable text colour depending on how light the accent is
+      const isLight = ['#F5B7AD', '#C7B5F0', '#26D9D8'].includes(card.accent.toUpperCase());
+      head.style.color = isLight ? '#042D49' : '#FFFFFF';
+      head.innerHTML = "<h2>" + card.title + "</h2><div class="count">" + card.names.length + " people on today</div>";
+      cardEl.appendChild(head);
+
+      const statsEl = document.createElement('div');
+      statsEl.className = 'stats';
+      statsEl.innerHTML =
+        "<div class="stat"><div class="value">" + card.callsAvailable + "</div><div class="label">Calls available</div></div>" +
+        "<div class="stat"><div class="value">" + card.hoursStaffed + "h</div><div class="label">Hours staffed</div></div>" +
+        "<div class="stat"><div class="value">" + card.completionPct + "%</div><div class="label">Est. completion</div></div>";
+      cardEl.appendChild(statsEl);
+
+      const track = document.createElement('div');
+      track.className = 'progress-track';
+      track.style.margin = '0 0 20px';
+      const fill = document.createElement('div');
+      fill.className = 'progress-fill';
+      fill.style.width = Math.min(card.completionPct, 100) + '%';
+      fill.style.background = card.accent;
+      track.appendChild(fill);
+      cardEl.appendChild(track);
+
+      if (card.names.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-note';
+        empty.textContent = 'No one assigned today.';
+        cardEl.appendChild(empty);
+      } else {
+        const ul = document.createElement('ul');
+        ul.className = 'names';
+        card.names.forEach(name => {
+          const li = document.createElement('li');
+          li.textContent = name;
+          li.dataset.name = name.toLowerCase();
+          ul.appendChild(li);
+        });
+        cardEl.appendChild(ul);
+      }
+
+      board.appendChild(cardEl);
+    });
+  }
+
+  renderBoard(ROTA_DATA);
+
+  // ---------------------------------------------------------------------
+  // Search / highlight behaviour
+  // ---------------------------------------------------------------------
+  const searchInput = document.getElementById('searchInput');
+  const clearBtn = document.getElementById('clearBtn');
+
+  function applySearch(query) {
+    const q = query.trim().toLowerCase();
+    const allNames = document.querySelectorAll('ul.names li');
+    if (!q) {
+      document.body.classList.remove('searching');
+      allNames.forEach(li => li.classList.remove('match'));
+      clearBtn.style.display = 'none';
+      return;
+    }
+    document.body.classList.add('searching');
+    clearBtn.style.display = 'inline-block';
+    allNames.forEach(li => {
+      if (li.dataset.name.includes(q)) {
+        li.classList.add('match');
+      } else {
+        li.classList.remove('match');
+      }
+    });
+  }
+
+  searchInput.addEventListener('input', (e) => applySearch(e.target.value));
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    applySearch('');
+    searchInput.focus();
+  });
+</script>
+
+</body>
+</html>
